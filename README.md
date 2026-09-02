@@ -1,4 +1,4 @@
-# Jari Bazaar — Herb E-Commerce Site (Pakistan)
+# Qudrat Essential by Faris — Herb E-Commerce Site (Pakistan)
 
 A single-page animated storefront selling herbs/jari booti in Pakistan.
 
