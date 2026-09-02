@@ -229,5 +229,48 @@ scrollTopBtn.addEventListener('click', () => window.scrollTo({ top:0, behavior:'
 
 document.getElementById('year').textContent = new Date().getFullYear();
 
+function initRevealOnScroll(){
+  const targets = document.querySelectorAll('.reveal');
+  if (!targets.length) return;
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  targets.forEach(el => observer.observe(el));
+}
+
+function initCountUp(){
+  const counters = document.querySelectorAll('[data-count-to]');
+  if (!counters.length) return;
+  const animate = (el) => {
+    const target = parseInt(el.dataset.countTo, 10);
+    const suffix = el.dataset.suffix || '';
+    const duration = 1400;
+    const start = performance.now();
+    const step = (now) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(target * eased).toLocaleString('en-PK') + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting){
+        animate(entry.target);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  counters.forEach(el => observer.observe(el));
+}
+
 renderProducts();
 renderCart();
+initRevealOnScroll();
+initCountUp();

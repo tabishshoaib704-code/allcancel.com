@@ -104,11 +104,23 @@ ul{list-style:none}
 .hero-badge{
   display:inline-block;background:var(--green-100);color:var(--green-800);
   padding:6px 16px;border-radius:999px;font-size:.82rem;font-weight:600;margin-bottom:18px;
+  opacity:0;animation:heroUp .7s var(--ease) forwards;
 }
-.hero-content h1{font-size:clamp(2.2rem,4.2vw,3.4rem);line-height:1.12;color:var(--green-900);margin-bottom:18px}
+.hero-content h1{
+  font-size:clamp(2.2rem,4.2vw,3.4rem);line-height:1.12;color:var(--green-900);margin-bottom:18px;
+  opacity:0;animation:heroUp .7s var(--ease) .1s forwards;
+}
 .hero-content h1 span{color:var(--green-600);font-style:italic}
-.hero-content p{color:var(--muted);font-size:1.08rem;max-width:480px;margin-bottom:28px}
-.hero-buttons{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:40px}
+.hero-content p{
+  color:var(--muted);font-size:1.08rem;max-width:480px;margin-bottom:28px;
+  opacity:0;animation:heroUp .7s var(--ease) .2s forwards;
+}
+.hero-buttons{
+  display:flex;gap:14px;flex-wrap:wrap;margin-bottom:40px;
+  opacity:0;animation:heroUp .7s var(--ease) .3s forwards;
+}
+.hero-stats{opacity:0;animation:heroUp .7s var(--ease) .4s forwards}
+@keyframes heroUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 .hero-stats{display:flex;gap:36px}
 .hero-stats strong{display:block;font-size:1.4rem;color:var(--green-800);font-family:'Playfair Display',serif}
 .hero-stats span{font-size:.82rem;color:var(--muted)}
@@ -122,7 +134,14 @@ ul{list-style:none}
 .hero-card{
   position:absolute;background:#fff;border-radius:16px;box-shadow:var(--shadow);
   padding:14px 18px;display:flex;align-items:center;gap:12px;width:220px;
+  opacity:0;
+  animation:cardPop .6s var(--ease) forwards, floaty 4.5s ease-in-out infinite;
+  animation-delay:.5s,.5s;
 }
+.hero-card:nth-of-type(2){animation-delay:.7s,.7s}
+@keyframes cardPop{from{opacity:0;transform:scale(.7) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.hero-ring{opacity:0;animation:ringIn .8s var(--ease) .3s forwards, spin 30s linear .8s infinite}
+@keyframes ringIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
 .hero-card:nth-of-type(1){top:12%;left:6%}
 .hero-card:nth-of-type(2){bottom:14%;right:0}
 .hero-card-emoji{font-size:1.8rem}
@@ -150,15 +169,31 @@ ul{list-style:none}
 .section-header h2{font-size:clamp(1.7rem,3vw,2.4rem);color:var(--green-900);margin-bottom:10px}
 .section-header p{color:var(--muted)}
 
+/* ---------- Scroll reveal ---------- */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.reveal.in-view{opacity:1;transform:translateY(0)}
+.steps-grid .step.reveal:nth-child(1){transition-delay:0s}
+.steps-grid .step.reveal:nth-child(2){transition-delay:.08s}
+.steps-grid .step.reveal:nth-child(3){transition-delay:.16s}
+.steps-grid .step.reveal:nth-child(4){transition-delay:.24s}
+
 /* ---------- Categories ---------- */
 .categories{padding:50px 0 10px}
 .cat-grid{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+.cat-grid.in-view .cat-chip{animation:chipIn .5s var(--ease) backwards}
+.cat-grid.in-view .cat-chip:nth-child(1){animation-delay:0s}
+.cat-grid.in-view .cat-chip:nth-child(2){animation-delay:.06s}
+.cat-grid.in-view .cat-chip:nth-child(3){animation-delay:.12s}
+.cat-grid.in-view .cat-chip:nth-child(4){animation-delay:.18s}
+.cat-grid.in-view .cat-chip:nth-child(5){animation-delay:.24s}
+@keyframes chipIn{from{opacity:0;transform:translateY(14px) scale(.9)}to{opacity:1;transform:translateY(0) scale(1)}}
 .cat-chip{
   display:flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;
   background:#fff;border:1.5px solid var(--green-100);font-weight:600;color:var(--green-800);
   cursor:pointer;transition:all .25s var(--ease);
 }
-.cat-chip:hover{border-color:var(--green-500);transform:translateY(-2px)}
+.cat-chip:hover{border-color:var(--green-500);transform:translateY(-2px) scale(1.04)}
+.cat-chip:active{transform:scale(.94)}
 .cat-chip.active{background:var(--green-700);color:#fff;border-color:var(--green-700)}
 
 /* ---------- Product grid ---------- */
@@ -183,7 +218,9 @@ ul{list-style:none}
 .product-badge{
   position:absolute;top:10px;left:10px;background:var(--gold-dark);color:#fff;
   font-size:.68rem;font-weight:700;padding:4px 10px;border-radius:999px;z-index:2;
+  animation:badgePulse 2.2s ease-in-out infinite;
 }
+@keyframes badgePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
 .product-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
 .product-body h3{font-size:1.02rem;font-family:'DM Sans',sans-serif;font-weight:700;color:var(--green-900)}
 .product-body p{font-size:.83rem;color:var(--muted);flex:1}
