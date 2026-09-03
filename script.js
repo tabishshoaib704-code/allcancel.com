@@ -1,16 +1,27 @@
 const PRODUCTS = [
-  { id:'ajwain',      name:'Ajwain (Carom Seeds)',  emoji:'🌰', cat:'seeds',    price:280, unit:'200g', desc:'Aids digestion, classic desi kitchen staple.', badge:'Bestseller' },
-  { id:'kalonji',     name:'Kalonji (Black Seed)',  emoji:'🖤', cat:'seeds',    price:450, unit:'250g', desc:'The "seed of blessing" — daily wellness boost.' },
-  { id:'sonf',        name:'Sonf (Fennel Seeds)',   emoji:'🌿', cat:'seeds',    price:220, unit:'250g', desc:'Cooling, aromatic, great after-meal digestive.' },
-  { id:'ashwagandha', name:'Ashwagandha Powder',    emoji:'🌾', cat:'roots',    price:890, unit:'200g', desc:'Adaptogen root for stress & stamina support.', badge:'Popular' },
-  { id:'moringa',     name:'Moringa (Sohanjna) Leaf', emoji:'🍃', cat:'leaves', price:520, unit:'200g', desc:'Nutrient-dense superfood leaf powder.' },
-  { id:'amla',        name:'Amla (Indian Gooseberry)', emoji:'🫒', cat:'roots', price:380, unit:'250g', desc:'Vitamin C rich powder for hair & immunity.' },
-  { id:'methi',       name:'Methi (Fenugreek Seeds)', emoji:'🌱', cat:'seeds', price:190, unit:'250g', desc:'Traditional remedy for sugar balance & flavour.' },
-  { id:'neem',        name:'Neem Leaf Powder',      emoji:'🍀', cat:'leaves',   price:340, unit:'150g', desc:'Purifying herb, great for skin routines.' },
-  { id:'tulsi',       name:'Tulsi (Holy Basil) Tea', emoji:'🍵', cat:'leaves', price:410, unit:'100g', desc:'Calming herbal tea, brewed daily by millions.' },
-  { id:'ginger',      name:'Sonth (Dry Ginger Powder)', emoji:'🫚', cat:'roots', price:310, unit:'200g', desc:'Warming spice for tea, cooking & wellness.' },
-  { id:'turmeric',    name:'Haldi (Turmeric Root Powder)', emoji:'🟡', cat:'roots', price:260, unit:'250g', desc:'Anti-inflammatory golden spice, farm fresh.' },
-  { id:'chamomile',   name:'Wellness Sleep Blend',  emoji:'💊', cat:'wellness', price:650, unit:'100g', desc:'Chamomile + tulsi + lavender calming blend.', badge:'New' },
+  { id:'barberry',           name:'Barberry',            img:'images/products/barberry.jpg',           cat:'fruits', price:350, unit:'100g', desc:'Tart dried berries, rich in antioxidants.' },
+  { id:'barley',              name:'Barley',               img:'images/products/barley.jpg',              cat:'fruits', price:180, unit:'500g', desc:'Whole grain, great for soups & detox water.' },
+  { id:'basil-seeds',         name:'Basil Seeds',          img:'images/products/basil-seeds.jpg',         cat:'seeds',  price:260, unit:'200g', desc:'Tukhm balanga — cooling summer drink seeds.', badge:'Bestseller' },
+  { id:'beetroot',            name:'Beetroot',             img:'images/products/beetroot.jpg',            cat:'roots',  price:150, unit:'500g', desc:'Fresh, earthy root — juices, salads & rasam.' },
+  { id:'behman-safaid',       name:'Behman Safaid',        img:'images/products/behman-safaid.jpg',       cat:'roots',  price:480, unit:'100g', desc:'Classic Unani tonic root for strength.' },
+  { id:'bahera-beleric',      name:'Bahera / Beleric',     img:'images/products/bahera-beleric.jpg',      cat:'fruits', price:320, unit:'250g', desc:'One of the three fruits of Triphala.' },
+  { id:'bitter-apple',        name:'Bitter Apple',         img:'images/products/bitter-apple.jpg',        cat:'fruits', price:380, unit:'100g', desc:'Indrayan — traditional bitter remedy fruit.' },
+  { id:'ashwagandha',         name:'Ashwagandha',          img:'images/products/ashwagandha.jpg',         cat:'roots',  price:650, unit:'200g', desc:'Whole dried root, adaptogen for stress relief.' },
+  { id:'ashwagandha-powder',  name:'Ashwagandha Powder',   img:'images/products/ashwagandha-powder.jpg',  cat:'roots',  price:890, unit:'200g', desc:'Finely milled for daily stamina support.', badge:'Popular' },
+  { id:'avocado-oil',         name:'Avocado Oil',          img:'images/products/avocado-oil.jpg',         cat:'oils',   price:1450, unit:'100ml', desc:'Cold-pressed, nourishing for skin & hair.' },
+  { id:'babchi',               name:'Babchi',                img:'images/products/babchi.jpg',               cat:'seeds',  price:420, unit:'100g', desc:'Bakuchi seeds, used in traditional skin care.' },
+  { id:'babool-gum',          name:'Babool Gum',           img:'images/products/babool-gum.jpg',          cat:'fruits', price:380, unit:'200g', desc:'Natural acacia gond, a winter wellness staple.' },
+  { id:'bael-fruit',          name:'Bael Fruit',           img:'images/products/bael-fruit.jpg',          cat:'fruits', price:340, unit:'200g', desc:'Dried wood-apple slices for digestive sharbat.' },
+  { id:'bahi-dana',           name:'Bahi Dana',            img:'images/products/bahi-dana.jpg',           cat:'seeds',  price:290, unit:'200g', desc:'Quince seeds, soothing when soaked overnight.' },
+  { id:'balchar',              name:'Balchar',               img:'images/products/balchar.jpg',               cat:'roots',  price:460, unit:'100g', desc:'Aromatic dried root used in Unani formulations.' },
+  { id:'acanthus-seeds',      name:'Acanthus Seeds',       img:'images/products/acanthus-seeds.jpg',      cat:'seeds',  price:240, unit:'200g', desc:'Ajwain-family seeds, warming and aromatic.' },
+  { id:'ajwain-khurasani',    name:'Ajwain Khurasani',     img:'images/products/ajwain-khurasani.jpg',    cat:'seeds',  price:260, unit:'200g', desc:'Hyoscyamus seeds, a traditional Unani herb.' },
+  { id:'akarkara',             name:'Akarkara',              img:'images/products/akarkara.jpg',              cat:'roots',  price:520, unit:'100g', desc:'Pellitory root, prized in oral wellness recipes.' },
+  { id:'aloe-vera-gel',       name:'Aloe Vera Gel',        img:'images/products/aloe-vera-gel.jpg',       cat:'oils',   price:690, unit:'200g', desc:'Pure gel, soothing daily moisturizer.', badge:'New' },
+  { id:'aloe-vera-oil',       name:'Aloe Vera Oil',        img:'images/products/aloe-vera-oil.jpg',       cat:'oils',   price:750, unit:'100ml', desc:'Lightweight oil for scalp & skin nourishment.' },
+  { id:'amba-haldi',          name:'Amba Haldi',           img:'images/products/amba-haldi.jpg',          cat:'roots',  price:340, unit:'200g', desc:'Wild mango turmeric with a distinct aroma.' },
+  { id:'amla-dry',            name:'Amla Dry',             img:'images/products/amla-dry.jpg',            cat:'fruits', price:300, unit:'250g', desc:'Sun-dried gooseberry, vitamin C rich.' },
+  { id:'arjuna-bark',         name:'Arjuna Bark',          img:'images/products/arjuna-bark.jpg',         cat:'roots',  price:310, unit:'200g', desc:'Traditional bark for heart & wellness teas.' },
 ];
 
 const STORAGE_KEY = 'jariBazaarCart';
@@ -36,9 +47,9 @@ function renderProducts(filter = 'all'){
     card.className = 'product-card';
     card.style.animationDelay = (i * 0.05) + 's';
     card.innerHTML = `
-      <div class="product-media" style="background:${mediaBg(i)}">
+      <div class="product-media">
         ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
-        <span class="product-emoji">${p.emoji}</span>
+        <img class="product-photo" src="${p.img}" alt="${p.name}" loading="lazy">
       </div>
       <div class="product-body">
         <h3>${p.name}</h3>
@@ -53,16 +64,6 @@ function renderProducts(filter = 'all'){
   });
 }
 
-function mediaBg(i){
-  const palette = [
-    'linear-gradient(135deg,#e6f4ea,#c8e6cf)',
-    'linear-gradient(135deg,#fdf3e2,#f3d9a7)',
-    'linear-gradient(135deg,#e8f5e9,#b9ddc3)',
-    'linear-gradient(135deg,#fbeee0,#eecb9b)',
-  ];
-  return palette[i % palette.length];
-}
-
 function addToCart(id, sourceBtn){
   cart[id] = (cart[id] || 0) + 1;
   saveCart();
@@ -70,7 +71,7 @@ function addToCart(id, sourceBtn){
   bumpCartIcon();
   if (sourceBtn) flyToCart(sourceBtn);
   const p = PRODUCTS.find(x => x.id === id);
-  showToast(`${p.emoji} ${p.name} added to cart`);
+  showToast(`${p.name} added to cart`);
   flashButton(sourceBtn);
 }
 
@@ -126,7 +127,7 @@ function renderCart(){
     const row = document.createElement('div');
     row.className = 'cart-item';
     row.innerHTML = `
-      <div class="cart-item-emoji">${p.emoji}</div>
+      <img class="cart-item-photo" src="${p.img}" alt="${p.name}">
       <div class="cart-item-info">
         <h4>${p.name}</h4>
         <span class="unit-price">${formatPKR(p.price)} / ${p.unit}</span>
@@ -161,9 +162,9 @@ function showToast(msg){
 function flyToCart(sourceBtn){
   const startRect = sourceBtn.getBoundingClientRect();
   const cartRect = document.getElementById('cartToggle').getBoundingClientRect();
-  const emoji = sourceBtn.closest('.product-card')?.querySelector('.product-emoji')?.textContent || '🌿';
+  const photoSrc = sourceBtn.closest('.product-card')?.querySelector('.product-photo')?.src || '';
 
-  flyItemEl.textContent = emoji;
+  flyItemEl.innerHTML = photoSrc ? `<img src="${photoSrc}" alt="">` : '';
   flyItemEl.style.left = (startRect.left + startRect.width/2 - 14) + 'px';
   flyItemEl.style.top = (startRect.top - 10) + 'px';
 
