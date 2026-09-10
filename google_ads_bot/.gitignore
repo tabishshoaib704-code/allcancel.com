@@ -1,0 +1,17 @@
+# NEVER commit credentials — this file holds a refresh token with write
+# access to your ad account.
+google-ads.yaml
+
+# Your live account ID / thresholds. Commit bot_config.yaml only if you're
+# comfortable with the customer_id being in the repo; otherwise keep using
+# the GOOGLE_ADS_CUSTOMER_ID secret and leave this ignored.
+bot_config.yaml
+
+reports/
+logs/
+
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+.env

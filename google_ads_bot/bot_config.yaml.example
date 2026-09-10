@@ -1,0 +1,32 @@
+# Rename to bot_config.yaml and adjust to your account.
+customer_id: "1234567890"        # No dashes, the account this bot manages
+currency_divisor: 1000000        # Google Ads API returns micros
+
+lookback_days: 7                 # Rolling window used for performance decisions
+
+# --- Budget rules ---
+# If a campaign's ROAS is above target and it isn't losing impression share
+# to budget, bump the daily budget. If CPA is too high, trim it.
+target_cpa: 45.00                 # dollars, your acceptable cost per lead
+target_roas: 3.0                  # revenue / spend, if you track conversion value
+max_daily_budget: 150.00          # dollars, hard ceiling per campaign
+budget_increase_step_pct: 15      # % to raise budget when performing well
+budget_decrease_step_pct: 20      # % to cut budget when underperforming
+min_conversions_for_decision: 5   # don't touch budgets on tiny sample sizes
+
+# --- Keyword/bid rules ---
+pause_keyword_after_clicks_no_conversion: 25   # clicks with 0 conversions -> pause
+low_quality_score_threshold: 3                  # flag keywords at/below this QS
+
+# --- Safety / compliance ---
+# This account has a history of a Google Ads policy suspension, so the bot
+# defaults to conservative behavior: it will NOT auto-pause a whole campaign
+# or auto-resume anything. It only proposes/executes budget & keyword-level
+# changes within the guardrails above, and always logs a full audit trail.
+dry_run: true                     # true = log proposed changes only, no writes
+max_changes_per_run: 10           # circuit breaker against runaway automation
+alert_on_disapproved_ads: true
+alert_on_policy_status_change: true
+
+# --- Reporting ---
+report_output_dir: "./reports"

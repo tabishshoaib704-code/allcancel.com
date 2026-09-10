@@ -1,0 +1,129 @@
+name: Google Ads Bot
+
+on:
+  schedule:
+    # 06:00 UTC daily = 11:00 AM Pakistan time. Cron here is always UTC.
+    # Note: GitHub's scheduler can lag by several minutes under load, and
+    # disables schedules on repos with no activity for 60 days.
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Run mode"
+        required: true
+        default: "dry-run"
+        type: choice
+        options:
+          - dry-run
+          - report-only
+          - live
+
+# Never let two runs overlap — concurrent budget mutations on the same
+# account are a good way to get confusing results.
+concurrency:
+  group: ads-bot
+  cancel-in-progress: false
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    # 'production' environment lets you require manual approval before a
+    # live run. Create it under Settings > Environments and add a required
+    # reviewer. Highly recommended given this account's suspension history.
+    environment: ${{ github.event.inputs.mode == 'live' && 'production' || '' }}
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Write credentials from secrets
+        env:
+          GOOGLE_ADS_DEVELOPER_TOKEN: ${{ secrets.GOOGLE_ADS_DEVELOPER_TOKEN }}
+          GOOGLE_ADS_CLIENT_ID: ${{ secrets.GOOGLE_ADS_CLIENT_ID }}
+          GOOGLE_ADS_CLIENT_SECRET: ${{ secrets.GOOGLE_ADS_CLIENT_SECRET }}
+          GOOGLE_ADS_REFRESH_TOKEN: ${{ secrets.GOOGLE_ADS_REFRESH_TOKEN }}
+          GOOGLE_ADS_LOGIN_CUSTOMER_ID: ${{ secrets.GOOGLE_ADS_LOGIN_CUSTOMER_ID }}
+        run: python scripts/write_creds.py
+
+      - name: Prepare bot config
+        run: |
+          # bot_config.yaml is committed (thresholds are not secret), but the
+          # account ID comes from a secret via env var at runtime.
+          if [ ! -f bot_config.yaml ]; then
+            cp bot_config.yaml.example bot_config.yaml
+          fi
+
+      - name: Run bot
+        env:
+          GOOGLE_ADS_CUSTOMER_ID: ${{ secrets.GOOGLE_ADS_CUSTOMER_ID }}
+        run: |
+          MODE="${{ github.event.inputs.mode }}"
+          # Scheduled runs have no input — default them to dry-run.
+          if [ -z "$MODE" ]; then MODE="dry-run"; fi
+          echo "Running in mode: $MODE"
+
+          case "$MODE" in
+            live)
+              # main.py additionally requires dry_run: false in bot_config.yaml,
+              # so --live alone is not enough to write to the account.
+              python main.py --config bot_config.yaml --live
+              ;;
+            report-only)
+              python main.py --config bot_config.yaml --report-only
+              ;;
+            *)
+              python main.py --config bot_config.yaml
+              ;;
+          esac
+
+      - name: Remove credentials
+        if: always()
+        run: rm -f google-ads.yaml
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ads-bot-report-${{ github.run_number }}
+          path: reports/
+          retention-days: 30
+          if-no-files-found: warn
+
+      - name: Summarize run
+        if: always()
+        run: |
+          echo "### Google Ads Bot run" >> $GITHUB_STEP_SUMMARY
+          LATEST=$(ls -t reports/run_*.txt 2>/dev/null | head -1)
+          if [ -n "$LATEST" ]; then
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat "$LATEST" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "No report was produced — check the run logs above." >> $GITHUB_STEP_SUMMARY
+          fi
+
+      # A cron job that silently stops running is worse than no bot at all.
+      # This opens an issue on failure, which emails you via GitHub's
+      # default notification settings.
+      - name: Open issue on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Ads bot run failed (run #${context.runNumber})`,
+              body: `The scheduled Google Ads bot run failed.\n\n[View the run logs](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})\n\nCommon causes: expired refresh token, deprecated API version, or a changed customer ID.`,
+              labels: ['ads-bot', 'automation-failure']
+            })

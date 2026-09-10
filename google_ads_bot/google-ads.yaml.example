@@ -1,0 +1,9 @@
+# Rename this file to google-ads.yaml and fill in your real values.
+# Get these from: https://developers.google.com/google-ads/api/docs/first-call/overview
+developer_token: "YOUR_DEVELOPER_TOKEN"
+client_id: "YOUR_OAUTH_CLIENT_ID.apps.googleusercontent.com"
+client_secret: "YOUR_OAUTH_CLIENT_SECRET"
+refresh_token: "YOUR_REFRESH_TOKEN"
+# Only needed if you access the account through a manager (MCC) account:
+# login_customer_id: "1234567890"
+use_proto_plus: true
